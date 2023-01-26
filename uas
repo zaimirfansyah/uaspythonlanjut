@@ -1,1 +1,79 @@
 
+from tkinter import *
+from tkinter import scrolledtext
+from tkinter import filedialog
+import ctypes
+import sys
+ 
+ctypes.windll.shcore.SetProcessDpiAwareness(True)
+
+appName = 'app tugas uas'
+nofileOpenedString = 'file baru ges'
+
+currentFilePath = nofileOpenedString
+
+
+fileTypes = [("Text Files","*.txt"), ("Markdown","*.md")]
+
+
+window = Tk()
+
+window.grid_columnconfigure(0, weight=1)
+window.title(appName + " - " + currentFilePath)
+
+# buatt ukuran window
+window.geometry('500x400')
+
+def fileDropDownHandeler(action):
+    global currentFilePath
+
+    # buat Open file
+    if action == "open":
+        file = filedialog.askopenfilename(filetypes = fileTypes)
+
+        window.title(appName + " - " + file)
+
+        currentFilePath = file
+
+        with open(file, 'r') as f:
+            txt.delete(1.0,END)
+            txt.insert(INSERT,f.read())
+
+    # buat file baruu
+    elif action == "new":
+        currentFilePath = nofileOpenedString
+        txt.delete(1.0,END)
+        window.title(appName + " - " + currentFilePath)
+
+    # buat nyimpen file
+    elif action == "save" or action == "saveAs":
+        if currentFilePath == nofileOpenedString or action=='saveAs':
+            currentFilePath = filedialog.asksaveasfilename(filetypes = fileTypes)
+
+        with open(currentFilePath, 'w') as f:
+            f.write(txt.get('1.0','end'))
+
+        window.title(appName + " - " + currentFilePath)
+
+def textchange(event):
+    window.title(appName + " - *" + currentFilePath)
+
+
+txt = scrolledtext.ScrolledText(window, height=999)
+txt.grid(row=1,sticky=N+S+E+W)
+txt.bind('<KeyPress>', textchange)
+
+menu = Menu(window)
+
+fileDropdown = Menu(menu, tearoff=False)
+fileDropdown.add_command(label='buat baru ges', command=lambda: fileDropDownHandeler("new"))
+fileDropdown.add_command(label='Open file ges', command=lambda: fileDropDownHandeler("open"))
+
+fileDropdown.add_separator()
+fileDropdown.add_command(label='Simpan ges', command=lambda: fileDropDownHandeler("save"))
+fileDropdown.add_command(label='Simpan sebagai apaaa', command=lambda: fileDropDownHandeler("saveAs"))
+
+menu.add_cascade(label='File', menu=fileDropdown)
+
+window.config(menu=menu)
+window.mainloop()
