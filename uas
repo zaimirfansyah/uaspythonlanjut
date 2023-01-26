@@ -11,13 +11,9 @@ appName = 'app tugas uas'
 nofileOpenedString = 'file baru ges'
 
 currentFilePath = nofileOpenedString
-
-
 fileTypes = [("Text Files","*.txt"), ("Markdown","*.md")]
 
-
 window = Tk()
-
 window.grid_columnconfigure(0, weight=1)
 window.title(appName + " - " + currentFilePath)
 
@@ -30,9 +26,7 @@ def fileDropDownHandeler(action):
     # buat Open file
     if action == "open":
         file = filedialog.askopenfilename(filetypes = fileTypes)
-
         window.title(appName + " - " + file)
-
         currentFilePath = file
 
         with open(file, 'r') as f:
@@ -57,7 +51,6 @@ def fileDropDownHandeler(action):
 
 def textchange(event):
     window.title(appName + " - *" + currentFilePath)
-
 
 txt = scrolledtext.ScrolledText(window, height=999)
 txt.grid(row=1,sticky=N+S+E+W)
